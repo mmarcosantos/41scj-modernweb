@@ -1,4 +1,4 @@
-# Peoject Hands On FIAP MBA
+# Project Hands On FIAP MBA
 
 In the project directory, you can run:
 
