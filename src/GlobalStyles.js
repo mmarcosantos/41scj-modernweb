@@ -26,7 +26,7 @@ export const GlobalStyles = createGlobalStyle`
         color: var(--textPrimary);
     }
 
-    input {
+    input, select {
         border: 2px solid var(--primary);
         width: 100%;
         padding: 5px;
