@@ -24,6 +24,8 @@ export const GlobalStyles = createGlobalStyle`
         background-color: var(--bgPrimary);
 
         color: var(--textPrimary);
+
+        overflow: hidden;
     }
 
     input, select {

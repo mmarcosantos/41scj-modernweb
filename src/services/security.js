@@ -8,3 +8,9 @@ export const signIn = (user) => {
 
     api.defaults.headers.common["authorization"] = `Bearer ${user.token}`;
 }
+
+export const getUser = () => {
+    const { student } = JSON.parse(localStorage.getItem(USER_KEY));
+
+    return student;
+}

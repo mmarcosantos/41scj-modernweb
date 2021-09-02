@@ -25,7 +25,12 @@ export const CardPost = styled.article`
     }
 
     > main{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
         > div {
+            width: 100%;
             padding: 0px 18px;
             > h1 {
                 font-size: 22px;
@@ -41,11 +46,12 @@ export const CardPost = styled.article`
 
         > img {
             margin-top: 18px;
-            width: 100%;
+            max-width: 100%;
             height: auto;
         }
 
         > footer {
+            width: 100%;
             display: flex;
             padding: 18px;
             gap: 5px;

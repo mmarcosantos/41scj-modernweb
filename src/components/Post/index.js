@@ -1,8 +1,14 @@
 import { CardComent, CardPost } from "./styles";
 import imgProfile from "../../assets/profile.png"
 import { useState } from "react";
+import { getUser } from "../../services/security";
+import { format } from "date-fns";
 
-function Post() {
+function Post({ data }) {
+
+    let signedUser = getUser();
+
+    console.log(data)
 
     const [showComents, setShowComents] = useState(false);
 
@@ -13,32 +19,33 @@ function Post() {
             <header>
                 <img src={imgProfile} />
                 <div>
-                    <p>por Fulano de Tal</p>
-                    <span>em 10/07/2021 às 13:00</span>
+                    <p>por {signedUser.studentId === data.Student.id ? "você" : data.Student.name}</p>
+                    <span>em {format(new Date(data.created_at), "dd/MM/yyyy 'às' HH:mm")}</span>
                 </div>
             </header>
             <main>
                 <div>
-                    <h2>Aqui é o título</h2>
-                    <p>Aqui é a descrição</p>
+                    <h2>{data.title}</h2>
+                    <p>{data.description}</p>
                 </div>
-                <img src="https://marquesfernandes.com/wp-content/uploads/2020/01/1555172.jpg" />
+                {data.image && <img src={data.image} alt="imagem do post" />}
                 <footer>
-                    <p>Font-end</p>
-                    <p>CSS</p>
-                    <p>React JS</p>
+                    {data.Categories.map(c => <p>{c.description}</p>)}
                 </footer>
             </main>
             <footer>
-                <h3 onClick={toggleComents}>Comentários</h3>
+                <h3 onClick={toggleComents}>
+                    {
+                        data.Answers.length === 0 ?
+                            "Seja o primeiro a comentar" :
+                            `${data.Answers.length} Comentário${data.Answers.length > 1 && "s"}`
+                    }
+                </h3>
                 {showComents && (
                     <>
                         <Coment />
-                        <Coment />
-                        <Coment />
                     </>
                 )}
-
                 <div>
                     <input placeholder="Comente este post" />
                     <button>Enviar</button>
