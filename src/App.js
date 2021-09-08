@@ -14,7 +14,7 @@ function App() {
     const doSignIn = async () => {
       try {
         const response = await api.post("/sessions", {
-          email: "rafanleme@gmail.com",
+          email: "nada@nada.com",
           password: "123456"
         });
 

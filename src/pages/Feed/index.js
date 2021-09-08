@@ -42,6 +42,8 @@ function Feed() {
         }
     }
 
+    
+
     useEffect(() => {
         loadPosts();
     }, []);

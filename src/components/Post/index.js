@@ -3,6 +3,7 @@ import imgProfile from "../../assets/profile.png"
 import { useState } from "react";
 import { getUser } from "../../services/security";
 import { format } from "date-fns";
+import { api } from "../../services/api";
 
 function Post({ data }) {
 
@@ -11,9 +12,43 @@ function Post({ data }) {
     console.log(data)
 
     const [showComents, setShowComents] = useState(false);
+    const [comentario, setComentario] = useState([])
+    const [isLoading, setIsLoading] = useState(false);
+    const [disabled, setDisabled] = useState();
 
     const toggleComents = () => setShowComents(!showComents);
 
+    const handleEnviar = async (e) => {
+        if (comentario.length < 10) 
+        return alert("O comentário deve ter no mínimo 10 caracteres");
+
+    setIsLoading(true);
+        try {
+            const response = await api.post(`/questions/${data.id}/answers`, {
+                description: comentario
+            })
+           
+            let answer = response.data;
+            let user = getUser();
+            answer.Student = user;
+            response.data["created_at"] = response.data.createdAt;
+            data.Answers.push(response.data);
+
+            setDisabled(true)
+            setComentario("");
+           
+        } catch (error) {
+            console.error(error);
+            alert(error);
+        } finally{
+            setIsLoading(false);
+        }
+    };
+    const handleDisabled = async (e) => {
+        setDisabled(e.target.value.length > 9);
+        setComentario(e.target.value);
+    }
+ 
     return (
         <CardPost>
             <header>
@@ -43,30 +78,43 @@ function Post({ data }) {
                 </h3>
                 {showComents && (
                     <>
-                        <Coment />
+                       {data.Answers.map(answer => <Coment data={answer} key={answer.id} />)}
                     </>
                 )}
                 <div>
-                    <input placeholder="Comente este post" />
-                    <button>Enviar</button>
+
+
+                    {isLoading &&
+                        <h4>Enviando Comentário...</h4>
+                    }
+
+                    {!isLoading &&
+                        <div>
+                            <form onSubmit={handleEnviar}>
+                                <input placeholder="Comente este post" onChange={handleDisabled} />
+                                <button disabled={!disabled} >Enviar</button>
+                            </form>
+                        </div>
+                    }
+
                 </div>
             </footer>
         </CardPost>
     );
 }
 
-function Coment() {
+function Coment({data}) {
 
     return (
         <CardComent>
             <header>
-                <img src={imgProfile} />
+                <img src={data.Student.image} />
                 <div>
-                    <p>por Ciclano</p>
-                    <span>em 10/10/2021 às 13:00</span>
+                    <p>por {data.Student.name}</p>
+                    <span>em {format(new Date(data.created_at), "dd/MM/yyyy 'às' HH:mm")}</span>
                 </div>
             </header>
-            <p>Este é o comentário</p>
+            <p>{data.description}</p>
         </CardComent>
     );
 }
